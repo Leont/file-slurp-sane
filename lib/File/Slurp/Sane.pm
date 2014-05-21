@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Carp 'croak';
+use Encode 'resolve_alias';
 use Exporter 5.57 'import';
 use File::Spec::Functions 'catfile';
 use FileHandle;
@@ -12,7 +13,7 @@ sub read_binary {
 	my ($filename, %options) = @_;
 	my $buf_ref = defined $options{buf_ref} ? $options{buf_ref} : \my $buf;
 
-	open my $fh, "<:unix", $filename or croak "Couldn't open $filename: $!";
+	open my $fh, '<:unix', $filename or croak "Couldn't open $filename: $!";
 	if (my $size = -s $fh) {
 		my ($pos, $read) = 0;
 		do {
@@ -28,14 +29,30 @@ sub read_binary {
 	return $buf;
 }
 
+my $crlf_default = $^O eq 'MSWin32' ? 1 : 0;
+
+sub _text_layers {
+	my ($encoding, $options) = @_;
+	my $canonical = resolve_alias($encoding) or croak "Unknown encoding '$encoding'";
+	my $crlf = exists $options->{crlf} ? !! delete $options->{crlf} : $crlf_default;
+	return $crlf ? ':crlf' : ':raw' if $canonical eq 'iso-8859-1';
+	if ($crlf) {
+		my $crlf_safe = $canonical =~ /^(utf-?8|iso-8859-|ascii$|euc|Mac|cp12|jis0201-raw|big5|visciii)/;
+		return $crlf_safe ? ":unix:crlf:encoding($encoding)" : ":raw:encoding($encoding):crlf";
+	}
+	else {
+		return ":raw:encoding($encoding)";
+	}
+}
+
 sub read_text {
 	my ($filename, $encoding, %options) = @_;
-	$encoding |= 'utf-8';
-	my $buf_ref = exists $options{buf_ref} ? $options{buf_ref} : \my $buf;
-	my $line_end = exists $options{crlf} ? $options{crlf} ? ':crlf' : ':raw' : '';
-	my $decode = $encoding eq 'latin1' ? '' : ":encoding($encoding)";
+	$encoding ||= 'utf-8';
+	my $layer = _text_layers($encoding, \%options);
+	return read_binary($filename, %options) if $layer eq ':raw';
 
-	open my $fh, "<$line_end$decode", $filename or croak "Couldn't open $filename: $!";
+	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
+	my $buf_ref = exists $options{buf_ref} ? $options{buf_ref} : \my $buf;
 	${$buf_ref} = do { local $/; <$fh> };
 	close $fh;
 	return if not defined wantarray or $options{buf_ref};
@@ -44,11 +61,10 @@ sub read_text {
 
 sub read_lines {
 	my ($filename, $encoding, %options) = @_;
-	$encoding |= 'utf-8';
-	my $line_end = exists $options{crlf} ? delete $options{crlf} ? ':crlf' : ':raw' : '';
-	my $decode = $encoding eq 'latin1' ? '' : ":encoding($encoding)";
+	$encoding ||= 'utf-8';
+	my $layer = _text_layers($encoding, \%options);
 
-	open my $fh, "<$line_end$decode", $filename or croak "Couldn't open $filename: $!";
+	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
 	return <$fh> if not %options;
 	my @buf = <$fh>;
 	close $fh;
@@ -96,7 +112,7 @@ This forces crlf translation on the input. The default for this argument is plat
 
 =item read_binary
 
-Reads file C<$filename> into a scalar without any decoding or transformation. By default it returns this scalar. Can optionally take these named arguments:
+Reads file C<$filename> into a scalar without any decoding or transformation. By default it returns this scalar. Can optionally take this named argument:
 
 =over 4
 
