@@ -11,8 +11,6 @@ use Test::More;
 my $content = do { local $/; open my $fh, '<:raw', $0; <$fh> };
 is(read_text($0), $content, 'read_file() works');
 is(read_binary($0), $content, 'read_binary() works');
-read_text($0, 'latin1', buf_ref => \my $buf);
-is($buf, $content, 'read_text(buf_ref => $buf) works');
 
 my @content = split /(?<=\n)/, $content;
 
