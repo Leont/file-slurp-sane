@@ -87,6 +87,8 @@ sub read_dir {
 
 =head1 DESCRIPTION
 
+B<DISCLAIMER>: this module is experimental, and may still change in non-compatible ways.
+
 This module provides functions for fast and correct slurping and spewing. All functions are optionally exported.
 
 =func read_text($filename, $encoding, %options)
