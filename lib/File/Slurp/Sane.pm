@@ -28,18 +28,19 @@ sub read_binary {
 }
 
 my $crlf_default = $^O eq 'MSWin32' ? 1 : 0;
+my $has_utf8_strict = eval { require PerlIO::utf8_strict };
 
 sub _text_layers {
 	my ($encoding, $options) = @_;
-	my $canonical = resolve_alias($encoding) or croak "Unknown encoding '$encoding'";
 	my $crlf = exists $options->{crlf} ? !! delete $options->{crlf} : $crlf_default;
-	return $crlf ? ':crlf' : ':raw' if $canonical eq 'iso-8859-1';
-	if ($crlf) {
-		my $crlf_safe = $canonical =~ /^(utf-?8|iso-8859-|ascii$|euc|Mac|cp12|jis0201-raw|big5|visciii)/;
-		return $crlf_safe ? ":unix:crlf:encoding($encoding)" : ":raw:encoding($encoding):crlf";
+	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
+		return $crlf ? ':unix:crlf:perlio' : ':raw'
+	}
+	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/) {
+		return $crlf ? ':unix:utf8_strict:crlf:perlio' : ':unix:utf8_strict:perlio';
 	}
 	else {
-		return ":raw:encoding($encoding)";
+		return $crlf ? ":unix:perlio:encoding($encoding):crlf:perlio" : ":raw:encoding($encoding)";
 	}
 }
 
