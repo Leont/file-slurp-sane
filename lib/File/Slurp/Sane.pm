@@ -3,10 +3,8 @@ use strict;
 use warnings;
 
 use Carp 'croak';
-use Encode 'resolve_alias';
 use Exporter 5.57 'import';
 use File::Spec::Functions 'catfile';
-use FileHandle;
 our @EXPORT_OK = qw/read_binary read_text read_lines read_dir/;
 
 sub read_binary {
