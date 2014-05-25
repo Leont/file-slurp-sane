@@ -36,7 +36,7 @@ sub _text_layers {
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
 		return $crlf ? ':unix:crlf:perlio' : ':raw'
 	}
-	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/) {
+	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/i) {
 		return $crlf ? ':unix:utf8_strict:crlf:perlio' : ':unix:utf8_strict:perlio';
 	}
 	else {
