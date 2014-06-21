@@ -9,16 +9,16 @@ our @EXPORT_OK = qw/read_binary read_text read_lines read_dir/;
 
 sub read_binary {
 	my $filename = shift;
-	my $buf;
 
 	open my $fh, '<:unix', $filename or croak "Couldn't open $filename: $!";
 	if (my $size = -s $fh) {
+		my $buf;
 		my ($pos, $read) = 0;
 		do {
-			defined($read = read $fh, $buf, $size - $pos, $pos) or croak "Couldn't read $filename: $!";
+			defined($read = read $fh, ${$buf}, $size - $pos, $pos) or croak "Couldn't read $filename: $!";
 			$pos += $read;
 		} while ($read && $pos < $size);
-		return $buf;
+		return ${$buf};
 	}
 	else {
 		return do { local $/; <$fh> };
