@@ -10,6 +10,8 @@ our @EXPORT_OK = qw/read_binary read_text read_lines read_dir/;
 sub read_binary {
 	my $filename = shift;
 
+	# This logic is a bit ugly, but gives a significant speed boost
+	# because slurpy readline is not optimized for non-buffered usage
 	open my $fh, '<:unix', $filename or croak "Couldn't open $filename: $!";
 	if (my $size = -s $fh) {
 		my $buf;
@@ -31,14 +33,16 @@ my $has_utf8_strict = eval { require PerlIO::utf8_strict };
 sub _text_layers {
 	my ($encoding, $options) = @_;
 	my $crlf = exists $options->{crlf} ? !! delete $options->{crlf} : $crlf_default;
+	# An extra :perlio at the end gives a small speed boost for undetermined reasons.
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
-		return $crlf ? ':unix:crlf:perlio' : ':raw'
+		return $crlf ? ':unix:crlf:perlio' : ':raw';
 	}
 	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/i) {
 		return $crlf ? ':unix:utf8_strict:crlf:perlio' : ':unix:utf8_strict:perlio';
 	}
 	else {
-		return $crlf ? ":unix:perlio:encoding($encoding):crlf:perlio" : ":raw:encoding($encoding)";
+		# non-ascii compatible encodings such as UTF-16 need encoding before crlf
+		return $crlf ? ":raw:encoding($encoding):crlf:perlio" : ":raw:encoding($encoding):perlio";
 	}
 }
 
