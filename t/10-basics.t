@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use File::Spec::Functions qw/catfile/;
-use File::Slurp::Sane qw/read_text read_binary read_lines read_dir/;
+use File::Slurper qw/read_text read_binary read_lines read_dir/;
 
 use Test::More;
 

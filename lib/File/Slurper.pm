@@ -1,4 +1,4 @@
-package File::Slurp::Sane;
+package File::Slurper;
 use strict;
 use warnings;
 
@@ -84,7 +84,7 @@ sub read_dir {
 
 =head1 SYNOPSIS
 
- use File::Slurp::Sane 'read_text';
+ use File::Slurper 'read_text';
  my $content = read_text($filename);
 
 =head1 DESCRIPTION
@@ -130,6 +130,16 @@ Open C<dirname> and return all entries except C<.> and C<..>. Can optionally tak
 =item * prefix
 
 This will prepend C<$dir> to the entries
+
+=back
+
+=head1 TODO
+
+=over 4
+
+=item * Writer functions
+
+=item * C<open_text>?
 
 =back
 
