@@ -1,6 +1,8 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+
+0.002     2014-10-21 19:03:44+02:00 Europe/Amsterdam
           rename File::Slurp::Sane to File::Slurper
           Accept UTF-8 as encoding case-insensitively
           Fix performance issue on 5.20.0
