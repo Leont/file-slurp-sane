@@ -1,6 +1,7 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+          Implement writer functions
           Default to crlf=off, add auto option for old behavior
 
 0.002     2014-10-21 19:03:44+02:00 Europe/Amsterdam

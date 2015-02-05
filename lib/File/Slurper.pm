@@ -5,7 +5,7 @@ use warnings;
 use Carp 'croak';
 use Exporter 5.57 'import';
 use File::Spec::Functions 'catfile';
-our @EXPORT_OK = qw/read_binary read_text read_lines read_dir/;
+our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text read_dir/;
 
 sub read_binary {
 	my $filename = shift;
@@ -54,6 +54,21 @@ sub read_text {
 
 	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
 	return do { local $/; <$fh> };
+}
+
+sub write_text {
+	my ($filename, undef, $encoding, %options) = @_;
+	$encoding ||= 'utf-8';
+	my $layer = _text_layers($encoding, \%options);
+
+	open my $fh, ">$layer", $filename or croak "Couldn't open $filename: $!";
+	print $fh $_[1] or croak "Couldn't write to $filename: $!";
+	close $fh or croak "Couldn't write to $filename: $!";
+	return;
+}
+
+sub write_binary {
+	return write_text(@_[0,1], 'latin-1');
 }
 
 sub read_lines {
@@ -121,6 +136,14 @@ C<chomp> the lines.
 
 =back
 
+=func write_text($filename, $content, $encoding, %options)
+
+Writes C<$content> to file C<$filename>, encoding it to C<$encoding> (which defaults to UTF-8). It can optionally take a C<crlf> named argument that works exactly as in read_text.
+
+=func write_binary($filename, $content)
+
+Writes C<$content> to file C<$filename> as binary data.
+
 =func read_dir($dirname, %options)
 
 Open C<dirname> and return all entries except C<.> and C<..>. Can optionally take this named argument:
@@ -136,8 +159,6 @@ This will prepend C<$dir> to the entries
 =head1 TODO
 
 =over 4
-
-=item * Writer functions
 
 =item * C<open_text>?
 
