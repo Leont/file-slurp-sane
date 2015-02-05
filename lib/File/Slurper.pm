@@ -32,7 +32,7 @@ my $has_utf8_strict = eval { require PerlIO::utf8_strict };
 
 sub _text_layers {
 	my ($encoding, $options) = @_;
-	my $crlf = exists $options->{crlf} ? !! delete $options->{crlf} : $crlf_default;
+	my $crlf = $options->{crlf} ? $options->{crlf} eq 'auto' ? $crlf_default : !! delete $options->{crlf} : '';
 	# An extra :perlio at the end gives a small speed boost for undetermined reasons.
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
 		return $crlf ? ':unix:crlf:perlio' : ':raw';
@@ -101,7 +101,7 @@ Reads file C<$filename> into a scalar and decodes it from C<$encoding> (which de
 
 =item * crlf
 
-This forces crlf translation on the input. The default for this argument is platform specific.
+This forces crlf translation on the input. The default for this argument is off. The special value C<auto> will set it to a platform specific default value.
 
 =back
 
