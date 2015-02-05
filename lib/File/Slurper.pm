@@ -168,13 +168,13 @@ This will prepend C<$dir> to the entries
 
 =over 4
 
-=item * L<Path::Tiny>
+=item * L<Path::Tiny|Path::Tiny>
 
 A minimalistic abstraction not only around IO but also paths.
 
-=item * L<File::Slurp>
+=item * L<IO::All|IO::All>
 
-Another file slurping tool.
+An attempt to expose as many IO related features as possible via a single API.
 
 =back
 
