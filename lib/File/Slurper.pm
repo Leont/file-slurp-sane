@@ -165,6 +165,14 @@ This will prepend C<$dir> to the entries
 
 =back
 
+=head1 RATIONALE
+
+This module tries to make it as easy as possible to read and write files correctly and fast. The most correct way of doing this is not always obvious (e.g. L<#83126|https://rt.cpan.org/Public/Bug/Display.html?id=83126>), and just as often the most obvious correct way is not the fastest correct way. This module hides away all such complications behind an easy intuitive interface.
+
+=head1 DEPENDENCIES
+
+This module has an optional dependency on PerlIO::utf8_strict. Installing this will make UTF-8 encoded IO significantly faster, but should not otherwise affect the operation of this module. This may change into a dependency on the related Unicode::UTF8 in the future.
+
 =head1 SEE ALSO
 
 =over 4
