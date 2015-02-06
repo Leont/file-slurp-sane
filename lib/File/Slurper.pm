@@ -96,7 +96,7 @@ sub read_dir {
 
 1;
 
-# ABSTRACT: A simple, sane and efficient file slurper
+# ABSTRACT: A simple, sane and efficient module to slurp a file
 
 =head1 SYNOPSIS
 
