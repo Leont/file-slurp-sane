@@ -33,16 +33,15 @@ my $has_utf8_strict = eval { require PerlIO::utf8_strict };
 sub _text_layers {
 	my ($encoding, $options) = @_;
 	my $crlf = $options->{crlf} ? $options->{crlf} eq 'auto' ? $crlf_default : !! delete $options->{crlf} : '';
-	# An extra :perlio at the end gives a small speed boost for undetermined reasons.
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
-		return $crlf ? ':unix:crlf:perlio' : ':raw';
+		return $crlf ? ':unix:crlf' : ':raw';
 	}
 	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/i) {
-		return $crlf ? ':unix:utf8_strict:crlf:perlio' : ':unix:utf8_strict:perlio';
+		return $crlf ? ':unix:utf8_strict:crlf' : ':unix:utf8_strict';
 	}
 	else {
 		# non-ascii compatible encodings such as UTF-16 need encoding before crlf
-		return $crlf ? ":raw:encoding($encoding):crlf:perlio" : ":raw:encoding($encoding):perlio";
+		return $crlf ? ":raw:encoding($encoding):crlf" : ":raw:encoding($encoding)";
 	}
 }
 

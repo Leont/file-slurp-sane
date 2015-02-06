@@ -1,6 +1,7 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+          Work around PerlIO encoding bug
 
 0.003     2015-02-05 20:42:26+01:00 Europe/Amsterdam
           Implement writer functions
