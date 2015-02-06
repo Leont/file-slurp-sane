@@ -1,4 +1,5 @@
 package File::Slurper;
+
 use strict;
 use warnings;
 
