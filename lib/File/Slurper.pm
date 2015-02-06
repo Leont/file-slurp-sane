@@ -32,7 +32,9 @@ my $has_utf8_strict = eval { require PerlIO::utf8_strict };
 
 sub _text_layers {
 	my ($encoding, $options) = @_;
-	my $crlf = $options->{crlf} ? $options->{crlf} eq 'auto' ? $crlf_default : !! delete $options->{crlf} : '';
+	my $crlf = !! delete $options->{crlf};
+	$crlf = $crlf_default if $crlf eq 'auto';
+
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
 		return $crlf ? ':unix:crlf' : ':raw';
 	}
