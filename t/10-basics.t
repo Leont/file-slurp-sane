@@ -20,7 +20,6 @@ chomp @content;
 is_deeply([ read_lines($0, 'utf-8', chomp => 1) ], \@content, 'read_lines(chomp => 1) returns the right thing');
 
 is_deeply([ read_dir('lib') ], [ 'File' ], 'read_dir appears to work');
-is_deeply([ read_dir('lib', prefix => 1) ], [ catfile(qw/lib File/) ], 'read_dir(prefix => 1) appears to work');
 
 my ($fh, $filename) = tempfile(UNLINK => 1);
 

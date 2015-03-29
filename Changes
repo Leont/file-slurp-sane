@@ -1,6 +1,7 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+          Get rid of singular named options
 
 0.004     2015-02-06 17:08:01+01:00 Europe/Amsterdam
           Work around PerlIO encoding bug
