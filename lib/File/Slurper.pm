@@ -73,15 +73,15 @@ sub write_binary {
 }
 
 sub read_lines {
-	my ($filename, $encoding, %options) = @_;
+	my ($filename, $encoding, $crlf, $skip_chomp) = @_;
 	$encoding ||= 'utf-8';
-	my $layer = _text_layers($encoding, $options{crlf});
+	my $layer = _text_layers($encoding, $crlf);
 
 	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
-	return <$fh> if not %options;
+	return <$fh> if $skip_chomp;
 	my @buf = <$fh>;
 	close $fh;
-	chomp @buf if $options{chomp};
+	chomp @buf;
 	return @buf;
 }
 
@@ -114,17 +114,9 @@ Reads file C<$filename> into a scalar and decodes it from C<$encoding> (which de
 
 Reads file C<$filename> into a scalar without any decoding or transformation.
 
-=func read_lines($filename, $encoding, %options)
+=func read_lines($filename, $encoding, $crlf, $skip_chomp)
 
-Reads file C<$filename> into a list/array after decoding from C<$encoding>. By default it returns this list. Can optionally take this named argument:
-
-=over 4
-
-=item * chomp
-
-C<chomp> the lines.
-
-=back
+Reads file C<$filename> into a list/array line-by-line, after decoding from C<$encoding>, optional crlf translation and chomping.
 
 =func write_text($filename, $content, $encoding, $crlf)
 
