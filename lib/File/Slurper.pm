@@ -53,6 +53,7 @@ sub read_text {
 	my $layer = _text_layers($encoding, $crlf);
 	return read_binary($filename) if $layer eq ':raw';
 
+	local $PerlIO::encoding::fallback = 1;
 	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
 	return do { local $/; <$fh> };
 }
@@ -62,6 +63,7 @@ sub write_text {
 	$encoding ||= 'utf-8';
 	my $layer = _text_layers($encoding, $crlf);
 
+	local $PerlIO::encoding::fallback = 1;
 	open my $fh, ">$layer", $filename or croak "Couldn't open $filename: $!";
 	print $fh $_[1] or croak "Couldn't write to $filename: $!";
 	close $fh or croak "Couldn't write to $filename: $!";
@@ -77,6 +79,7 @@ sub read_lines {
 	$encoding ||= 'utf-8';
 	my $layer = _text_layers($encoding, $crlf);
 
+	local $PerlIO::encoding::fallback = 1;
 	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
 	return <$fh> if $skip_chomp;
 	my @buf = <$fh>;
