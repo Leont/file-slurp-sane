@@ -1,6 +1,8 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+
+0.006     2015-07-02 02:02:00+02:00 Europe/Amsterdam
           Unmark experimental status
           Always croak on encoding error
 
