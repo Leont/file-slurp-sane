@@ -131,21 +131,13 @@ Writes C<$content> to file C<$filename> as binary data.
 
 Open C<dirname> and return all entries except C<.> and C<..>.
 
-=head1 TODO
-
-=over 4
-
-=item * C<open_text>?
-
-=back
-
 =head1 RATIONALE
 
 This module tries to make it as easy as possible to read and write files correctly and fast. The most correct way of doing this is not always obvious (e.g. L<#83126|https://rt.cpan.org/Public/Bug/Display.html?id=83126>), and just as often the most obvious correct way is not the fastest correct way. This module hides away all such complications behind an easy intuitive interface.
 
 =head1 DEPENDENCIES
 
-This module has an optional dependency on PerlIO::utf8_strict. Installing this will make UTF-8 encoded IO significantly faster, but should not otherwise affect the operation of this module. This may change into a dependency on the related Unicode::UTF8 in the future.
+This module has an optional dependency on L<PerlIO::utf8_strict|PerlIO::utf8_strict>. Installing this will make UTF-8 encoded IO significantly faster, but should not otherwise affect the operation of this module. This may change into a dependency on the related Unicode::UTF8 in the future.
 
 =head1 SEE ALSO
 
@@ -153,11 +145,19 @@ This module has an optional dependency on PerlIO::utf8_strict. Installing this w
 
 =item * L<Path::Tiny|Path::Tiny>
 
-A minimalistic abstraction not only around IO but also paths.
+A minimalistic abstraction handling not only IO but also paths.
 
 =item * L<IO::All|IO::All>
 
 An attempt to expose as many IO related features as possible via a single API.
+
+=back
+
+=head1 TODO
+
+=over 4
+
+=item * C<open_text>?
 
 =back
 
