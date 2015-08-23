@@ -2,6 +2,7 @@ Revision history for File-Slurper
 
 {{$NEXT}}
           Added more items to a SEE ALSO
+          Fixed up benchmarks
 
 0.006     2015-07-02 02:02:00+02:00 Europe/Amsterdam
           Unmark experimental status

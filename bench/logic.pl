@@ -9,7 +9,7 @@ use File::Slurper 'read_binary';
 use Benchmark 'cmpthese';
 
 my $filename = shift or die "No argument given";
-my $count = shift || 10000;
+my $count = shift || -0.5;
 
 sub read_complicated {
 	my $filename = shift;
@@ -27,7 +27,7 @@ sub read_complicated {
 
 sub read_complicated_ref {
 	my $filename = shift;
-	my $buf;
+	my $buf = shift;
 
 	open my $fh, '<:unix', $filename or croak "Couldn't open $filename: $!";
 	my $size = -s $fh;
@@ -49,7 +49,7 @@ sub read_simple {
 sub read_naive {
 	my $filename = shift;
 
-	open my $fh, '<:perlio', $filename or croak "Couldn't open $filename: $!";
+	open my $fh, '<:raw', $filename or croak "Couldn't open $filename: $!";
 	return do { local $/; <$fh> };
 }
 
@@ -69,12 +69,12 @@ sub read_sysread {
 
 cmpthese($count, {
 	complicated => sub { read_complicated($filename) },
-	ref         => sub { read_complicated_ref($filename) },
+	ref         => sub { read_complicated_ref($filename, \my $content) },
 	simple      => sub { read_simple($filename) },
 	naive       => sub { read_naive($filename) },
 	sysread     => sub { read_sysread($filename) },
 	slurp       => sub { read_file($filename, binmode => ':raw') },
-	sane        => sub { read_binary($filename) },
+	slurper     => sub { read_binary($filename) },
 });
 
 cmpthese($count, {
@@ -82,7 +82,7 @@ cmpthese($count, {
 	simple      => sub { my $content = read_simple($filename) },
 	naive       => sub { my $content = read_naive($filename) },
 	sysread     => sub { my $content = read_sysread($filename) },
-	ref         => sub { my $content = read_complicated_ref($filename) },
+	ref         => sub { read_complicated_ref($filename, \my $content) },
 	slurp       => sub { my $content = read_file($filename, binmode => ':raw') },
-	sane        => sub { my $content = read_binary($filename) },
+	slurper     => sub { my $content = read_binary($filename) },
 });
