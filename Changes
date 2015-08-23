@@ -1,6 +1,8 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+
+0.007     2015-08-23 09:52:45+02:00 Europe/Amsterdam
           Added more items to a SEE ALSO
           Fixed up benchmarks
 
