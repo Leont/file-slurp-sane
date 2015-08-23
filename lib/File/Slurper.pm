@@ -5,7 +5,6 @@ use warnings;
 
 use Carp 'croak';
 use Exporter 5.57 'import';
-use File::Spec::Functions 'catfile';
 our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text read_dir/;
 
 sub read_binary {
@@ -28,17 +27,19 @@ sub read_binary {
 	}
 }
 
-my $crlf_default = $^O eq 'MSWin32' ? 1 : 0;
-my $has_utf8_strict = eval { require PerlIO::utf8_strict };
+use constant {
+	CRLF_DEFAULT => $^O eq 'MSWin32',
+	HAS_UTF8_STRICT => do { local $@; eval { require PerlIO::utf8_strict } },
+};
 
 sub _text_layers {
 	my ($encoding, $crlf) = @_;
-	$crlf = $crlf_default if $crlf && $crlf eq 'auto';
+	$crlf = CRLF_DEFAULT if $crlf && $crlf eq 'auto';
 
 	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
 		return $crlf ? ':unix:crlf' : ':raw';
 	}
-	elsif ($has_utf8_strict && $encoding =~ /^utf-?8\b/i) {
+	elsif (HAS_UTF8_STRICT && $encoding =~ /^utf-?8\b/i) {
 		return $crlf ? ':unix:utf8_strict:crlf' : ':unix:utf8_strict';
 	}
 	else {
@@ -151,13 +152,23 @@ A minimalistic abstraction handling not only IO but also paths.
 
 An attempt to expose as many IO related features as possible via a single API.
 
+=item * L<File::Slurp|File::Slurp>
+
+This is previous generation file slurping module. It has a number of issues, as described <here|http://blogs.perl.org/users/leon_timmermans/2015/08/fileslurp-is-broken-and-wrong.html>
+
+=item * L<File::Slurp::Tiny|File::Slurp::Tiny>
+
+This was my previous attempt at a better file slurping module. It's mostly (but not entirely) a drop-in replacement for File::Slurp, which is both a feature (easy conversion) and a bug (interface issues).
+
 =back
 
 =head1 TODO
 
 =over 4
 
-=item * C<open_text>?
+=item * C<open_text>/C<open_binary>?
+
+=item * C<drain_handle>?
 
 =back
 
