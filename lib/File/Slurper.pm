@@ -29,7 +29,7 @@ sub read_binary {
 
 use constant {
 	CRLF_DEFAULT => $^O eq 'MSWin32',
-	HAS_UTF8_STRICT => do { local $@; eval { require PerlIO::utf8_strict } },
+	HAS_UTF8_STRICT => scalar do { local $@; eval { require PerlIO::utf8_strict } },
 };
 
 sub _text_layers {
