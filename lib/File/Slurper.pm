@@ -154,7 +154,7 @@ An attempt to expose as many IO related features as possible via a single API.
 
 =item * L<File::Slurp|File::Slurp>
 
-This is previous generation file slurping module. It has a number of issues, as described <here|http://blogs.perl.org/users/leon_timmermans/2015/08/fileslurp-is-broken-and-wrong.html>
+This is previous generation file slurping module. It has a number of issues, as described L<here|http://blogs.perl.org/users/leon_timmermans/2015/08/fileslurp-is-broken-and-wrong.html>
 
 =item * L<File::Slurp::Tiny|File::Slurp::Tiny>
 
