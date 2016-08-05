@@ -1,6 +1,8 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+
+0.009     2016-08-05 18:26:58+02:00 Europe/Amsterdam
           Load PerlIO::encoding before localizing $PerlIO::encoding::fallback
 
 0.008     2015-08-31 12:43:05+02:00 Europe/Amsterdam
