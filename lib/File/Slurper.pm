@@ -110,7 +110,7 @@ sub read_dir {
 
 =head1 DESCRIPTION
 
-This module provides functions for fast and correct slurping and spewing. All functions are optionally exported.
+This module provides functions for fast and correct slurping and spewing. All functions are optionally exported. All functions throw exceptions on errors, write functions don't return any meaningful value.
 
 =func read_text($filename, $encoding, $crlf)
 
@@ -158,7 +158,7 @@ An attempt to expose as many IO related features as possible via a single API.
 
 =item * L<File::Slurp|File::Slurp>
 
-This is previous generation file slurping module. It has a number of issues, as described L<here|http://blogs.perl.org/users/leon_timmermans/2015/08/fileslurp-is-broken-and-wrong.html>
+This is a previous generation file slurping module. It has a number of issues, as described L<here|http://blogs.perl.org/users/leon_timmermans/2015/08/fileslurp-is-broken-and-wrong.html>.
 
 =item * L<File::Slurp::Tiny|File::Slurp::Tiny>
 
