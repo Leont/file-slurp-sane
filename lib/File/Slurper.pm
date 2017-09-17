@@ -40,7 +40,7 @@ sub _text_layers {
 	my ($encoding, $crlf) = @_;
 	$crlf = CRLF_DEFAULT if $crlf && $crlf eq 'auto';
 
-	if ($encoding =~ /^(latin|iso-8859-)1$/i) {
+	if ($encoding =~ /^(latin-?|iso-8859-)1$/i) {
 		return $crlf ? ':unix:crlf' : ':raw';
 	}
 	elsif (HAS_UTF8_STRICT && $encoding =~ /^utf-?8\b/i) {
