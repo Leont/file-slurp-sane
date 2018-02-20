@@ -1,6 +1,7 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+          Depend on Encode 2.11 for STOP_AT_PARTIAL
 
 0.011     2017-12-18 21:23:24+01:00 Europe/Amsterdam
           Correctly set value of $PerlIO::encoding::fallback

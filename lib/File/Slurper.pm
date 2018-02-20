@@ -6,7 +6,7 @@ use warnings;
 use Carp 'croak';
 use Exporter 5.57 'import';
 
-use Encode qw/FB_CROAK STOP_AT_PARTIAL/;
+use Encode 2.11 qw/FB_CROAK STOP_AT_PARTIAL/;
 use PerlIO::encoding;
 
 our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text read_dir/;
