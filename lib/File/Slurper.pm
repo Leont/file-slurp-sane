@@ -13,11 +13,13 @@ our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text rea
 
 sub read_binary {
 	my $filename = shift;
+	my $size = shift;
 
 	# This logic is a bit ugly, but gives a significant speed boost
 	# because slurpy readline is not optimized for non-buffered usage
 	open my $fh, '<:unix', $filename or croak "Couldn't open $filename: $!";
-	if (my $size = -s $fh) {
+	$size = -s $fh unless defined $size;
+	if ($size) {
 		my $buf;
 		my ($pos, $read) = 0;
 		do {
@@ -116,9 +118,10 @@ This module provides functions for fast and correct slurping and spewing. All fu
 
 Reads file C<$filename> into a scalar and decodes it from C<$encoding> (which defaults to UTF-8). If C<$crlf> is true, crlf translation is performed. The default for this argument is off. The special value C<'auto'> will set it to a platform specific default value.
 
-=func read_binary($filename)
+=func read_binary($filename, [$size])
 
 Reads file C<$filename> into a scalar without any decoding or transformation.
+When C<$size> is given, read only <$size> bytes.
 
 =func read_lines($filename, $encoding, $crlf, $skip_chomp)
 

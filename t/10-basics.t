@@ -13,6 +13,12 @@ my $content = do { local $/; open my $fh, '<:raw', $0; <$fh> };
 is(read_text($0), $content, 'read_file() works');
 is(read_binary($0), $content, 'read_binary() works');
 
+if(-e "/dev/urandom")
+{
+    my $rand = read_binary("/dev/urandom", 16);
+    is(length $rand, 16, "read_binary(\$device, \$size) works");
+}
+
 my @content = split /(?<=\n)/, $content;
 
 is_deeply([ read_lines($0, 'utf-8', 0, 1) ], \@content, 'read_lines returns the right thing (no chomp)');
