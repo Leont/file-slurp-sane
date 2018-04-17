@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use File::Spec::Functions qw/catfile/;
-use File::Slurper qw/read_text read_binary read_lines write_text read_dir/;
+use File::Slurper qw/read_text read_binary read_lines write_text write_binary append_text append_binary read_dir/;
 use File::Temp 'tempfile';
 
 use Test::More;
@@ -26,5 +26,14 @@ my ($fh, $filename) = tempfile(UNLINK => 1);
 
 ok(eval { write_text($filename, $content); 1 }, 'File has been written') or diag "Error: $@";
 is(read_text($filename), $content, 'New file has correct content');
+
+ok(eval { append_text($filename, "foo"); 1 }, 'File has been extended') or diag "Error: $@";
+is(read_text($filename), $content . "foo", 'Extended file has correct content');
+
+ok(eval { write_binary($filename, $content); 1 }, 'File has been written as binary') or diag "Error: $@";
+is(read_binary($filename), $content, 'New file has correct binary content');
+
+ok(eval { append_binary($filename, "foo"); 1 }, 'File has been extended as binary') or diag "Error: $@";
+is(read_binary($filename), $content . "foo", 'Extended file has correct binary content');
 
 done_testing;
