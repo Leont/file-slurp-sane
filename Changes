@@ -1,6 +1,7 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+          Always split on newlines in read_lines
 
 0.012     2018-02-20 21:53:30+01:00 Europe/Amsterdam
           Depend on Encode 2.11 for STOP_AT_PARTIAL
