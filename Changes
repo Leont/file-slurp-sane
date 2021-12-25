@@ -1,6 +1,8 @@
 Revision history for File-Slurper
 
 {{$NEXT}}
+
+0.013     2021-12-25 10:09:17+01:00 Europe/Amsterdam
           Always split on newlines in read_lines
 
 0.012     2018-02-20 21:53:30+01:00 Europe/Amsterdam
