@@ -56,7 +56,7 @@ sub read_text {
 
 	local $PerlIO::encoding::fallback = STOP_AT_PARTIAL | FB_CROAK;
 	open my $fh, "<$layer", $filename or croak "Couldn't open $filename: $!";
-	return do { local $/; <$fh> };
+	return scalar do { local $/; <$fh> };
 }
 
 sub write_text {
