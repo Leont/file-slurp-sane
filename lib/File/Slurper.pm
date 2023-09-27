@@ -9,7 +9,7 @@ use Exporter 5.57 'import';
 use Encode 2.11 qw/FB_CROAK STOP_AT_PARTIAL/;
 use PerlIO::encoding;
 
-our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text read_dir/;
+our @EXPORT_OK = qw/read_binary read_text read_lines write_binary write_text append_binary append_text read_dir/;
 
 sub read_binary {
 	my $filename = shift;
@@ -59,13 +59,14 @@ sub read_text {
 	return scalar do { local $/; <$fh> };
 }
 
-sub write_text {
-	my ($filename, undef, $encoding, $crlf) = @_;
+sub _write_text {
+	my ($filename, undef, $encoding, $crlf, $append) = @_;
 	$encoding ||= 'utf-8';
 	my $layer = _text_layers($encoding, $crlf);
+        my $mode = $append ? '>>' : '>';
 
 	local $PerlIO::encoding::fallback = STOP_AT_PARTIAL | FB_CROAK;
-	open my $fh, ">$layer", $filename or croak "Couldn't open $filename: $!";
+	open my $fh, "$mode$layer", $filename or croak "Couldn't open $filename: $!";
 	print $fh $_[1] or croak "Couldn't write to $filename: $!";
 	close $fh or croak "Couldn't write to $filename: $!";
 	return;
@@ -73,11 +74,26 @@ sub write_text {
 
 sub write_binary {
 	my $filename = $_[0];
-	open my $fh, ">:raw", $filename or croak "Couldn't open $filename: $!";
+        my $mode = $_[2] ? '>>' : '>';
+	open my $fh, "$mode:raw", $filename or croak "Couldn't open $filename: $!";
 	print $fh $_[1] or croak "Couldn't write to $filename: $!";
 	close $fh or croak "Couldn't write to $filename: $!";
 	return;
 }
+
+sub write_text {
+        return _write_text(@_);
+}
+
+sub append_text {
+	my ($filename, undef, $encoding, $crlf) = @_;
+        return _write_text($filename, $_[1], $encoding, $crlf, 1);
+}
+
+sub append_binary {
+        return write_binary($_[0], $_[1], 1);
+}
+
 
 sub read_lines {
 	my ($filename, $encoding, $crlf, $skip_chomp) = @_;
@@ -132,6 +148,15 @@ Writes C<$content> to file C<$filename>, encoding it to C<$encoding> (which defa
 =func write_binary($filename, $content)
 
 Writes C<$content> to file C<$filename> as binary data.
+
+=func append_text($filename, $content, $encoding, $crlf)
+
+Appends C<$content> to file C<$filename>, encoding it to C<$encoding> (which defaults to UTF-8). It can also take a C<crlf> argument that works exactly as in read_text.
+
+=func write_binary($filename, $content)
+
+Appends C<$content> to file C<$filename> as binary data.
+
 
 =func read_dir($dirname)
 
